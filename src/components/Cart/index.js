@@ -1,8 +1,9 @@
 import classNames from 'classnames'
 import Count from '../Count'
 import './index.scss'
-import { useSelector,useDispatch } from 'react-redux'
-import { increCount,decreCount, clearCart} from '../../store/modules/takeaway'
+import { useSelector, useDispatch } from 'react-redux'
+import { increCount, decreCount, clearCart } from '../../store/modules/takeaway'
+import { useState } from 'react'
 
 const Cart = () => {
   const { cartList } = useSelector(state => state.foods)
@@ -13,16 +14,23 @@ const Cart = () => {
     return total + item.count
   }, 0)
   const dispatch = useDispatch()
+  const [visible, setVisible] = useState(false)
+  const onShow = () => {
+    if (cartList.length > 0) {
+      setVisible(true)
+    }
+  }
   return (
     <div className="cartContainer">
       {/* 遮罩层 添加visible类名可以显示出来 */}
       <div
-        className={classNames('cartOverlay')}
+        className={classNames('cartOverlay',visible && 'visible')}
+        onClick={() => setVisible(false)}
       />
       <div className="cart">
         {/* fill 添加fill类名可以切换购物车状态*/}
         {/* 购物车数量 */}
-        <div className={classNames('icon', cartList.length > 0 && 'fill')}>
+        <div className={classNames('icon', cartList.length > 0 && 'fill')} onClick={onShow}>
           {cartList.length > 0 && <div className="cartCornerMark">{totalNum}</div>}
         </div>
         {/* 购物车价格 */}
@@ -43,10 +51,11 @@ const Cart = () => {
         )}
       </div>
       {/* 添加visible类名 div会显示出来 */}
-      <div className={classNames('cartPanel',cartList.length > 0 && 'visible')}>
+      <div className={classNames('cartPanel',visible && 'visible')}>
+      {/* <div className={classNames('cartPanel',visible && 'visible',cartList.length > 0)}> */}
         <div className="header">
           <span className="text">购物车</span>
-          <span className="clearCart" onClick={()=> dispatch(clearCart())}>
+          <span className="clearCart" onClick={() => dispatch(clearCart())}>
             清空购物车
           </span>
         </div>
@@ -68,8 +77,8 @@ const Cart = () => {
                 </div>
                 <div className="skuBtnWrapper btnGroup">
                   <Count
-                    onPlus={() => dispatch(increCount({id:item.id}))}
-                    onMinus={() => dispatch(decreCount({id:item.id}))}
+                    onPlus={() => dispatch(increCount({ id: item.id }))}
+                    onMinus={() => dispatch(decreCount({ id: item.id }))}
                     count={item.count}
                   />
                 </div>
