@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { clear } from "@testing-library/user-event/dist/clear";
 import axios from "axios";
 import { set } from "lodash";
 
@@ -31,11 +32,26 @@ const foodsStore = createSlice({
             } else {
                 state.cartList = state.cartList.filter(item => item.id !== action.payload.id)
             }
+        },
+        increCount(state, action) {
+            const item = state.cartList.find(item => item.id === action.payload.id)
+            item.count++
+        },
+        decreCount(state, action) {
+            const item = state.cartList.find(item => item.id === action.payload.id)
+            if (item.count === 1) {
+                state.cartList = state.cartList.filter(item => item.id !== action.payload.id)
+                return
+            }
+            item.count--
+        },
+        clearCart(state) {
+            state.cartList = []
         }
     },
 })
 
-const { setFoodsList, changeActiveIndex, addCart,removeCart} = foodsStore.actions;
+const { setFoodsList, changeActiveIndex, addCart, removeCart, increCount, decreCount, clearCart } = foodsStore.actions;
 const fetchFoodsList = () => {
     return async (dispatch) => {
         const res = await axios.get("http://localhost:3004/takeaway");
@@ -44,6 +60,6 @@ const fetchFoodsList = () => {
     }
 }
 
-export { fetchFoodsList, changeActiveIndex, addCart,removeCart }
+export { fetchFoodsList, changeActiveIndex, addCart, removeCart, increCount, decreCount, clearCart }
 const reducer = foodsStore.reducer;
 export default reducer;
