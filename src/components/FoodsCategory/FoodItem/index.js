@@ -1,5 +1,5 @@
-import { useDispatch } from 'react-redux'
-import { addCart } from '../../../store/modules/takeaway'
+import { useDispatch,useSelector } from 'react-redux'
+import { addCart, removeCart } from '../../../store/modules/takeaway'
 import './index.scss'
 
 const Foods = ({
@@ -16,6 +16,7 @@ const Foods = ({
   count
 }) => {
   const dispatch = useDispatch()
+  const {cartList} = useSelector(state => state.foods)
   return (
     <dd className="cate-goods">
       <div className="goods-img-wrap">
@@ -55,6 +56,28 @@ const Foods = ({
                 count
               }))}
             >+</button>
+            {
+              cartList.find(item => item.id === id)
+              &&
+              <button
+                className="minus"
+                onClick={() => dispatch(removeCart({
+                  id,
+                  picture,
+                  name,
+                  unit,
+                  description,
+                  food_tag_list,
+                  month_saled,
+                  like_ratio_desc,
+                  price,
+                  tag,
+                  count
+                }))}
+              >
+                -
+              </button>
+            }
           </div>
         </div>
       </div>

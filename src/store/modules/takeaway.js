@@ -23,11 +23,19 @@ const foodsStore = createSlice({
             } else {
                 state.cartList.push(action.payload)
             }
+        },
+        removeCart(state, action) {
+            const item = state.cartList.find(item => item.id === action.payload.id)
+            if (item.count > 1) {
+                item.count--
+            } else {
+                state.cartList = state.cartList.filter(item => item.id !== action.payload.id)
+            }
         }
     },
 })
 
-const { setFoodsList, changeActiveIndex, addCart } = foodsStore.actions;
+const { setFoodsList, changeActiveIndex, addCart,removeCart} = foodsStore.actions;
 const fetchFoodsList = () => {
     return async (dispatch) => {
         const res = await axios.get("http://localhost:3004/takeaway");
@@ -36,6 +44,6 @@ const fetchFoodsList = () => {
     }
 }
 
-export { fetchFoodsList, changeActiveIndex, addCart }
+export { fetchFoodsList, changeActiveIndex, addCart,removeCart }
 const reducer = foodsStore.reducer;
 export default reducer;
