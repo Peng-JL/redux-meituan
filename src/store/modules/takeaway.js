@@ -5,20 +5,20 @@ import { set } from "lodash";
 const foodsStore = createSlice({
     name: "foods",
     initialState: {
-        foodsList: []
-        // tabList: [],
+        foodsList: [],
+        activeIndex: 0
     },
     reducers: {
         setFoodsList: (state, action) => {
             state.foodsList = action.payload;
+        },
+        changeActiveIndex: (state, action) => {
+            state.activeIndex = action.payload;
         }
-        // setTabList: (state, action) => {
-        //     state.tabList = action.payload;
-        // }
     },
 })
 
-const { setFoodsList } = foodsStore.actions;
+const { setFoodsList, changeActiveIndex } = foodsStore.actions;
 const fetchFoodsList = () => {
     return async (dispatch) => {
         const res = await axios.get("http://localhost:3004/takeaway");
@@ -26,13 +26,7 @@ const fetchFoodsList = () => {
         // console.log(res.data);
     }
 }
-// const fetchTabsList = () => {
-//     return async (dispatch) => {
-//         const res = await axios.get("http://localhost:3004/takeaway");
-//         dispatch(setTabList(res.data));
-//     }
-// }
 
-export { fetchFoodsList}
+export { fetchFoodsList, changeActiveIndex }
 const reducer = foodsStore.reducer;
 export default reducer;
